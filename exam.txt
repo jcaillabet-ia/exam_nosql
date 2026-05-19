@@ -1,0 +1,577 @@
+(a) Afficher le nombre de livres avec plus de 400 pages. Afficher ensuite le nombre de livres ayant plus de 400 pages ET qui sont publiés.
+books.count_documents({"pageCount": {"$gt": 400}})
+Il y a 157 livres avec plus de 400 pages.
+books.count_documents({"pageCount": {"$gt": 400}, "status": "PUBLISH"})
+Il y a 155 livres avec plus de 400 pages et qui sont publiés.
+
+(b) Afficher le nombre de livres ayant le mot-clé Android dans leur description (brève ou longue).
+books.count_documents({"$or": [{"longDescription": {"$regex": "Android"}}, {"shortDescription": {"$regex": "Android"}}]})
+Il y a 4 livres avec le mot-clé Android dans leur description (brève ou longue).
+
+(c) Chaque document possède un attribut categories qui est une liste. Vous devez grouper tous les documents en un à l'aide de l'opérateur $group. Puis, à l'aide de l'opérateur $addToSet, créez 2 sets à partir des catégories contenues dans la liste categories selon leur index 0 ou 1. Pour cibler, les catégories utilisez l'opérateur $arrayElemAt.
+agr = books.aggregate([{"$group": {"_id": None, "set_0": {"$addToSet": {"$arrayElemAt": ["$categories", 0]}}, "set_1": {"$addToSet": {"$arrayElemAt": ["$categories", 1]}}}}])
+Résultat de lagregation: 
+{
+    "_id": null,
+    "set_0": [
+        "internet",
+        "Client-Server",
+        "Programming",
+        "java",
+        "Microsoft .NET",
+        "In Action",
+        "SOA",
+        "Internet",
+        "Miscellaneous",
+        "Perl",
+        "Algorithmic Art",
+        "Software Engineering",
+        "Theory",
+        "Python",
+        "PowerBuilder",
+        "Next Generation Databases",
+        "Object-Technology Programming",
+        "Mobile Technology",
+        "Computer Graphics",
+        "Business",
+        "Open Source",
+        "Web Development",
+        "Object-Oriented Programming",
+        "Microsoft",
+        "XML",
+        "PHP",
+        "Microsoft/.NET",
+        "Networking",
+        "Java"
+    ],
+    "set_1": [
+        "Theory",
+        "P",
+        "Software Engineering",
+        "Mobile",
+        "Java",
+        "Networking",
+        ".NET",
+        "S",
+        "Internet",
+        "Perl",
+        "Software Development",
+        "Open Source",
+        "Computer Graphics",
+        "Business",
+        "Client-Server",
+        "",
+        "Python"
+    ]
+}
+(d) Afficher le nombre de livres qui contiennent des noms de langages suivants dans leur description longue : Python, Java, C++, Scala. On pourra s'appuyer sur des expressions régulières et une condition or.
+books.count_documents({"$or": [{"longDescription": {"$regex": "Python"}}, {"longDescription": {"$regex": "Java"}}, {"longDescription": {"$regex": "C++"}}, {"longDescription": {"$regex": "Scala"}}]})
+Il y a 195 livres contenant au moins un des mots Python, Java, C++, Scala dans leur description longue.
+
+(e) Afficher diverses informations statistiques sur notre base de données : nombre maximal, minimal, et moyen de pages par catégorie. On utilisera une pipeline d'agrégation, le mot-clé $group, ainsi que les accumulateurs appropriés. N'oubliez pas d'aller voir "$unwind" pour ce problème.
+Statistiques du nombre de pages par catégorie :
+[
+    {
+        "_id": "P",
+        "max": 512,
+        "min": 512,
+        "avg": 512.0
+    },
+    {
+        "_id": "Client-Server",
+        "max": 1101,
+        "min": 220,
+        "avg": 516.0
+    },
+    {
+        "_id": "internet",
+        "max": 400,
+        "min": 400,
+        "avg": 400.0
+    },
+    {
+        "_id": "Programming",
+        "max": 570,
+        "min": 0,
+        "avg": 362.1666666666667
+    },
+    {
+        "_id": "java",
+        "max": 0,
+        "min": 0,
+        "avg": 0.0
+    },
+    {
+        "_id": "Microsoft .NET",
+        "max": 848,
+        "min": 0,
+        "avg": 437.02941176470586
+    },
+    {
+        "_id": "In Action",
+        "max": 0,
+        "min": 0,
+        "avg": 0.0
+    },
+    {
+        "_id": "Client Server",
+        "max": 368,
+        "min": 368,
+        "avg": 368.0
+    },
+    {
+        "_id": "SOA",
+        "max": 250,
+        "min": 250,
+        "avg": 250.0
+    },
+    {
+        "_id": "Internet",
+        "max": 912,
+        "min": 0,
+        "avg": 441.2439024390244
+    },
+    {
+        "_id": "Miscellaneous",
+        "max": 1096,
+        "min": 316,
+        "avg": 706.0
+    },
+    {
+        "_id": "Perl",
+        "max": 504,
+        "min": 304,
+        "avg": 385.3333333333333
+    },
+    {
+        "_id": "S",
+        "max": 350,
+        "min": 350,
+        "avg": 350.0
+    },
+    {
+        "_id": "Algorithmic Art",
+        "max": 0,
+        "min": 0,
+        "avg": 0.0
+    },
+    {
+        "_id": "Software Engineering",
+        "max": 544,
+        "min": 0,
+        "avg": 287.75
+    },
+    {
+        "_id": "Mobile",
+        "max": 416,
+        "min": 416,
+        "avg": 416.0
+    },
+    {
+        "_id": "Theory",
+        "max": 591,
+        "min": 280,
+        "avg": 420.42857142857144
+    },
+    {
+        "_id": ".NET",
+        "max": 925,
+        "min": 925,
+        "avg": 925.0
+    },
+    {
+        "_id": "Python",
+        "max": 688,
+        "min": 350,
+        "avg": 482.3333333333333
+    },
+    {
+        "_id": "PowerBuilder",
+        "max": 550,
+        "min": 362,
+        "avg": 433.7142857142857
+    },
+    {
+        "_id": "",
+        "max": 368,
+        "min": 200,
+        "avg": 284.0
+    },
+    {
+        "_id": "Next Generation Databases",
+        "max": 0,
+        "min": 0,
+        "avg": 0.0
+    },
+    {
+        "_id": "Object-Technology Programming",
+        "max": 200,
+        "min": 200,
+        "avg": 200.0
+    },
+    {
+        "_id": "Mobile Technology",
+        "max": 504,
+        "min": 0,
+        "avg": 296.5
+    },
+    {
+        "_id": "Computer Graphics",
+        "max": 840,
+        "min": 328,
+        "avg": 520.3333333333334
+    },
+    {
+        "_id": "Business",
+        "max": 696,
+        "min": 180,
+        "avg": 404.1666666666667
+    },
+    {
+        "_id": "Open Source",
+        "max": 532,
+        "min": 416,
+        "avg": 474.0
+    },
+    {
+        "_id": "Web Development",
+        "max": 688,
+        "min": 300,
+        "avg": 441.47058823529414
+    },
+    {
+        "_id": "Object-Oriented Programming",
+        "max": 512,
+        "min": 350,
+        "avg": 408.5
+    },
+    {
+        "_id": "Software Development",
+        "max": 600,
+        "min": 600,
+        "avg": 600.0
+    },
+    {
+        "_id": "Microsoft",
+        "max": 925,
+        "min": 344,
+        "avg": 572.375
+    },
+    {
+        "_id": "XML",
+        "max": 680,
+        "min": 304,
+        "avg": 482.0
+    },
+    {
+        "_id": "PHP",
+        "max": 552,
+        "min": 552,
+        "avg": 552.0
+    },
+    {
+        "_id": "Computer Graph",
+        "max": 400,
+        "min": 400,
+        "avg": 400.0
+    },
+    {
+        "_id": "Miscella",
+        "max": 0,
+        "min": 0,
+        "avg": 0.0
+    },
+    {
+        "_id": "Microsoft/.NET",
+        "max": 0,
+        "min": 0,
+        "avg": 0.0
+    },
+    {
+        "_id": "Networking",
+        "max": 591,
+        "min": 0,
+        "avg": 366.42857142857144
+    },
+    {
+        "_id": "Java",
+        "max": 1088,
+        "min": 0,
+        "avg": 412.21875
+    }
+]
+
+(f) Via une pipeline d'agrégation, créer de nouvelles variables en extrayant des informations depuis l'attribut dates : année, mois, jour. On rajoutera une condition pour filtrer seulement les livres publiés après 2009. N'affichez que les 20 premiers.
+books.aggregate([{"$project": {"year": {"$year": "$publishedDate"}, "month": {"$month": "$publishedDate"}, "day": {"$dayOfMonth": "$publishedDate"}}}, {"$match": {"year": {"$gt": 2009}}}, {"$limit": 20}])
+Liste des 20 premiers livres publiés après 2009:
+[
+    {
+        "_id": 2,
+        "year": 2011,
+        "month": 1,
+        "day": 14
+    },
+    {
+        "_id": 3,
+        "year": 2011,
+        "month": 6,
+        "day": 3
+    },
+    {
+        "_id": 5,
+        "year": 2010,
+        "month": 11,
+        "day": 15
+    },
+    {
+        "_id": 8,
+        "year": 2010,
+        "month": 10,
+        "day": 15
+    },
+    {
+        "_id": 10,
+        "year": 2011,
+        "month": 12,
+        "day": 12
+    },
+    {
+        "_id": 9,
+        "year": 2012,
+        "month": 6,
+        "day": 4
+    },
+    {
+        "_id": 16,
+        "year": 2010,
+        "month": 4,
+        "day": 16
+    },
+    {
+        "_id": 17,
+        "year": 2011,
+        "month": 12,
+        "day": 12
+    },
+    {
+        "_id": 30,
+        "year": 2010,
+        "month": 6,
+        "day": 1
+    },
+    {
+        "_id": 36,
+        "year": 2011,
+        "month": 5,
+        "day": 15
+    },
+    {
+        "_id": 37,
+        "year": 2012,
+        "month": 2,
+        "day": 13
+    },
+    {
+        "_id": 41,
+        "year": 2013,
+        "month": 11,
+        "day": 1
+    },
+    {
+        "_id": 45,
+        "year": 2010,
+        "month": 1,
+        "day": 1
+    },
+    {
+        "_id": 52,
+        "year": 2010,
+        "month": 9,
+        "day": 4
+    },
+    {
+        "_id": 54,
+        "year": 2011,
+        "month": 9,
+        "day": 30
+    },
+    {
+        "_id": 65,
+        "year": 2012,
+        "month": 10,
+        "day": 17
+    },
+    {
+        "_id": 73,
+        "year": 2012,
+        "month": 4,
+        "day": 13
+    },
+    {
+        "_id": 74,
+        "year": 2012,
+        "month": 7,
+        "day": 27
+    },
+    {
+        "_id": 133,
+        "year": 2011,
+        "month": 4,
+        "day": 6
+    },
+    {
+        "_id": 137,
+        "year": 2012,
+        "month": 2,
+        "day": 13
+    }
+]
+
+(g) À partir de la liste des auteurs, créez de nouveaux attributs (author_1, author_2 ... author_n). Observez le comportement de "$arrayElemAt". N'affichez que les 20 premiers dans l'ordre chronologique.
+[{"$project": {"_id": "title","author_1": {"$arrayElemAt": ["$authors", 0]}, "author_2": {"$arrayElemAt": ["$authors", 1]}, "author_3": {"$arrayElemAt": ["$authors", 2]}, "author_4": {"$arrayElemAt": ["$authors", 3]}}},{"$sort": {"publishedDate": 1}}, {"$limit": 20}]
+Liste des autheurs pour les 20 premiers livres par ordre de publication:
+[
+    {
+        "_id": "title",
+        "author_1": "Michael J. Barlotta",
+        "author_2": "Jason R. Weiss"
+    },
+    {
+        "_id": "title",
+        "author_1": "Peter Armstrong"
+    },
+    {
+        "_id": "title",
+        "author_1": "Tariq Ahmed",
+        "author_2": "Dan Orlando",
+        "author_3": "John C. Bland II",
+        "author_4": "Joel Hooks"
+    },
+    {
+        "_id": "title",
+        "author_1": "Kyle Banker"
+    },
+    {
+        "_id": "title",
+        "author_1": "Peter Armstrong"
+    },
+    {
+        "_id": "title",
+        "author_1": "Alexandre de Castro Alves"
+    },
+    {
+        "_id": "title",
+        "author_1": "Jon Barrilleaux"
+    },
+    {
+        "_id": "title",
+        "author_1": "Gojko Adzic"
+    },
+    {
+        "_id": "title",
+        "author_1": "Levi Asher",
+        "author_2": "Christian Crumlish"
+    },
+    {
+        "_id": "title",
+        "author_1": "Satnam Alag"
+    },
+    {
+        "_id": "title",
+        "author_1": "Michael J. Barlotta"
+    },
+    {
+        "_id": "title",
+        "author_1": "Jamil Azher"
+    },
+    {
+        "_id": "title",
+        "author_1": "Bernerd Allmon",
+        "author_2": "Jeremy Anderson"
+    },
+    {
+        "_id": "title",
+        "author_1": "Michael Barlotta"
+    },
+    {
+        "_id": "title",
+        "author_1": "Tariq Ahmed with Jon Hirschi",
+        "author_2": "Faisal Abid"
+    },
+    {
+        "_id": "title",
+        "author_1": "Andres Almiray",
+        "author_2": "Danno Ferrin",
+        "author_3": "",
+        "author_4": "James Shingler"
+    },
+    {
+        "_id": "title",
+        "author_1": "W. Frank Ableson",
+        "author_2": "Robi Sen"
+    },
+    {
+        "_id": "title",
+        "author_1": "W. Frank Ableson",
+        "author_2": "Charlie Collins",
+        "author_3": "Robi Sen"
+    },
+    {
+        "_id": "title",
+        "author_1": "Rob Allen",
+        "author_2": "Nick Lo",
+        "author_3": "Steven Brown"
+    },
+    {
+        "_id": "title",
+        "author_1": "Kyle Baley",
+        "author_2": "Donald Belcham"
+    }
+]
+
+(h) En s'inspirant de la requête précédente, créer une colonne contenant le nom du premier auteur, puis agréger selon cette colonne pour obtenir le nombre d'articles pour chaque premier auteur. Afficher le nombre de publications pour les 10 premiers auteurs les plus prolifiques. On pourra utiliser un pipeline d'agrégation avec les mots-clés $group, $sort, $limit.
+books.aggregate([{"$project": {"first_author": {"$arrayElemAt": ["$authors", 0]}}}, {"$group": {"_id": "$first_author", "nb_livres": {"$sum": 1}}}, {"$sort": {"nb_livres": -1}}, {"$limit": 10}])
+Nombre de publications pour les 10 premiers auteurs les plus prolifiques:
+[
+    {
+        "_id": "Vikram Goyal",
+        "nb_livres": 12
+    },
+    {
+        "_id": "Don Jones",
+        "nb_livres": 6
+    },
+    {
+        "_id": "Christian Bauer",
+        "nb_livres": 4
+    },
+    {
+        "_id": "Craig Walls",
+        "nb_livres": 4
+    },
+    {
+        "_id": "Dave Crane",
+        "nb_livres": 3
+    },
+    {
+        "_id": "Tim Hatton",
+        "nb_livres": 3
+    },
+    {
+        "_id": "Richard Siddaway",
+        "nb_livres": 3
+    },
+    {
+        "_id": "Jeffrey Palermo",
+        "nb_livres": 3
+    },
+    {
+        "_id": "Erik Hatcher",
+        "nb_livres": 3
+    },
+    {
+        "_id": "W. Frank Ableson",
+        "nb_livres": 3
+    }
+]
+
