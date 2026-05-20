@@ -97,3 +97,18 @@ if __name__ == "__main__":
         f.write("Nombre de publications pour les 10 premiers auteurs les plus prolifiques:\n")
         json.dump(list(agr), f, indent=4, ensure_ascii=False)
         f.write("\n\n")
+
+        # (i) Afficher la distribution du nombre d'auteurs : Commencer par créer une nouvelle colonne avec le nombre d'auteurs (taille de la liste de l'attribut authors), puis agrégez sur cette colonne avec l'accumulateur $count ou $sum.
+        f.write("(i) Afficher la distribution du nombre d'auteurs : Commencer par créer une nouvelle colonne avec le nombre d'auteurs (taille de la liste de l'attribut authors), puis agrégez sur cette colonne avec l'accumulateur $count ou $sum.\n")
+        f.write('books.aggregate([{"$project": {"nb_auteurs": {"$size": "$authors"}}}, {"$group": {"_id": "$nb_auteurs", "nb_livres": {"$sum": 1}}}])\n')
+        agr = books.aggregate([{"$project": {"nb_auteurs": {"$size": "$authors"}}}, {"$group": {"_id": "$nb_auteurs", "nb_livres": {"$sum": 1}}}])
+        f.write("Distribution du nombre d'auteurs:\n")
+        json.dump(list(agr), f, indent=4, ensure_ascii=False)
+        f.write("\n\n")
+
+        # (j) Afficher l'occurrence de chaque auteur selon son index dans l'attribut "authors". Un même auteur peut avoir plusieurs index. N'affichez pas les auteurs vides, sortez par ordre d'occurrence décroissant avec une limite de 20. Utilisez "$unwind" pour séparer les auteurs et "$project" pour supprimer les auteurs absents.
+        f.write('(j) Afficher l\'occurrence de chaque auteur selon son index dans l\'attribut "authors". Un même auteur peut avoir plusieurs index. N\'affichez pas les auteurs vides, sortez par ordre d\'occurrence décroissant avec une limite de 20. Utilisez "$unwind" pour séparer les auteurs et "$project" pour supprimer les auteurs absents.')
+        f.write('agr = books.aggregate([{"$unwind": {"path": "$authors", "includeArrayIndex": "author_index"}}, {"$project": {"name": "$authors", "index": "$author_index"}}, {"$sort": {"index": -1}}, {"$limit": 20}])\n')
+        agr = books.aggregate([{"$unwind": {"path": "$authors", "includeArrayIndex": "author_index"}}, {"$project": {"name": "$authors", "index": "$author_index"}}, {"$sort": {"index": -1}}, {"$limit": 20}])
+        json.dump(list(agr), f, indent=4, ensure_ascii=False)
+        f.write("\n\n")

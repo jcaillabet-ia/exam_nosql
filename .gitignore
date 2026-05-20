@@ -2,3 +2,4 @@ sample_training/*.wt
 sample_training/*.lock
 sample_training/*.bson
 sample_training/WiredTiger
+sample_training/*.turtle
