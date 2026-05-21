@@ -59,7 +59,7 @@ if __name__ == "__main__":
         agr = books.aggregate([{"$group": {"_id": None, "set_0": {"$addToSet": {"$arrayElemAt": ["$categories", 0]}}, "set_1": {"$addToSet": {"$arrayElemAt": ["$categories", 1]}}}}])
         f.write("Résultat de lagregation: \n")
         json.dump(next(agr), f, indent=4, ensure_ascii=False)
-        f.write("\n")
+        f.write("\n\n")
 
         # (d) Afficher le nombre de livres qui contiennent des noms de langages suivants dans leur description longue : Python, Java, C++, Scala. On pourra s'appuyer sur des expressions régulières et une condition or.
         f.write("(d) Afficher le nombre de livres qui contiennent des noms de langages suivants dans leur description longue : Python, Java, C++, Scala. On pourra s'appuyer sur des expressions régulières et une condition or.\n")
@@ -69,6 +69,7 @@ if __name__ == "__main__":
 
         # (e) Afficher diverses informations statistiques sur notre base de données : nombre maximal, minimal, et moyen de pages par catégorie. On utilisera une pipeline d'agrégation, le mot-clé $group, ainsi que les accumulateurs appropriés. N'oubliez pas d'aller voir "$unwind" pour ce problème.
         f.write("(e) Afficher diverses informations statistiques sur notre base de données : nombre maximal, minimal, et moyen de pages par catégorie. On utilisera une pipeline d'agrégation, le mot-clé $group, ainsi que les accumulateurs appropriés. N'oubliez pas d'aller voir \"$unwind\" pour ce problème.\n")
+        f.write('books.aggregate([{"$unwind": "$categories"}, {"$group": {"_id": "$categories", "max": {"$max": "$pageCount"}, "min": {"$min": "$pageCount"}, "avg": {"$avg": "$pageCount"}}}])\n')
         agr = books.aggregate([{"$unwind": "$categories"}, {"$group": {"_id": "$categories", "max": {"$max": "$pageCount"}, "min": {"$min": "$pageCount"}, "avg": {"$avg": "$pageCount"}}}])
         f.write("Statistiques du nombre de pages par catégorie :\n")
         json.dump(list(agr), f, indent=4, ensure_ascii=False)
@@ -84,8 +85,10 @@ if __name__ == "__main__":
  
         # (g) À partir de la liste des auteurs, créez de nouveaux attributs (author_1, author_2 ... author_n). Observez le comportement de "$arrayElemAt". N'affichez que les 20 premiers dans l'ordre chronologique.
         f.write('(g) À partir de la liste des auteurs, créez de nouveaux attributs (author_1, author_2 ... author_n). Observez le comportement de "$arrayElemAt". N\'affichez que les 20 premiers dans l\'ordre chronologique.\n')
-        f.write('[{"$project": {"_id": "title","author_1": {"$arrayElemAt": ["$authors", 0]}, "author_2": {"$arrayElemAt": ["$authors", 1]}, "author_3": {"$arrayElemAt": ["$authors", 2]}, "author_4": {"$arrayElemAt": ["$authors", 3]}}},{"$sort": {"publishedDate": 1}}, {"$limit": 20}]\n')
-        agr = books.aggregate([{"$project": {"_id": "title","author_1": {"$arrayElemAt": ["$authors", 0]}, "author_2": {"$arrayElemAt": ["$authors", 1]}, "author_3": {"$arrayElemAt": ["$authors", 2]}, "author_4": {"$arrayElemAt": ["$authors", 3]}}},{"$sort": {"publishedDate": 1}}, {"$limit": 20}])
+        f.write('[{"$project": {"_id": "$title","author_1": {"$arrayElemAt": ["$authors", 0]}, "author_2": {"$arrayElemAt": ["$authors", 1]}, "author_3": {"$arrayElemAt": ["$authors", 2]}, "author_4": {"$arrayElemAt": ["$authors", 3]}}},{"$sort": {"publishedDate": 1}}, {"$limit": 20}]\n')
+        # Il a été choisit d'afficher que les 4 premiers auteurs, la collection à l'air d'avoir des livres avec au maximum 4 autheurs
+        # ( $arrayElemAt ne retourne rien si on demande un indice en dehors de la taille du tableau, et ne crée pas de nouvelle information, même vide )
+        agr = books.aggregate([{"$project": {"_id": "$title","author_1": {"$arrayElemAt": ["$authors", 0]}, "author_2": {"$arrayElemAt": ["$authors", 1]}, "author_3": {"$arrayElemAt": ["$authors", 2]}, "author_4": {"$arrayElemAt": ["$authors", 3]}}},{"$sort": {"publishedDate": 1}}, {"$limit": 20}])
         f.write("Liste des autheurs pour les 20 premiers livres par ordre de publication:\n")
         json.dump(list(agr), f, indent=4, ensure_ascii=False)
         f.write("\n\n")
@@ -108,7 +111,7 @@ if __name__ == "__main__":
 
         # (j) Afficher l'occurrence de chaque auteur selon son index dans l'attribut "authors". Un même auteur peut avoir plusieurs index. N'affichez pas les auteurs vides, sortez par ordre d'occurrence décroissant avec une limite de 20. Utilisez "$unwind" pour séparer les auteurs et "$project" pour supprimer les auteurs absents.
         f.write('(j) Afficher l\'occurrence de chaque auteur selon son index dans l\'attribut "authors". Un même auteur peut avoir plusieurs index. N\'affichez pas les auteurs vides, sortez par ordre d\'occurrence décroissant avec une limite de 20. Utilisez "$unwind" pour séparer les auteurs et "$project" pour supprimer les auteurs absents.')
-        f.write('agr = books.aggregate([{"$unwind": {"path": "$authors", "includeArrayIndex": "author_index"}}, {"$project": {"name": "$authors", "index": "$author_index"}}, {"$sort": {"index": -1}}, {"$limit": 20}])\n')
-        agr = books.aggregate([{"$unwind": {"path": "$authors", "includeArrayIndex": "author_index"}}, {"$project": {"name": "$authors", "index": "$author_index"}}, {"$sort": {"index": -1}}, {"$limit": 20}])
+        f.write('books.aggregate([{"$match": {"authors.0": {"$exists": True }}}, {"$unwind": {"path": "$authors", "includeArrayIndex": "author_index"}}, {"$match": {"authors": {"$ne": ""}}}, {"$project": {"name": "$authors", "index": "$author_index"}}, {"$sort": {"index": -1}}, {"$limit": 20}])\n')
+        agr = books.aggregate([{"$match": {"authors.0": {"$exists": True }}}, {"$unwind": {"path": "$authors", "includeArrayIndex": "author_index"}}, {"$match": {"authors": {"$ne": ""}}}, {"$project": {"name": "$authors", "index": "$author_index"}}, {"$sort": {"index": -1}}, {"$limit": 20}])
         json.dump(list(agr), f, indent=4, ensure_ascii=False)
         f.write("\n\n")

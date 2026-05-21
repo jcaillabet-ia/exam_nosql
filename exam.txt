@@ -14,206 +14,70 @@ Résultat de lagregation:
 {
     "_id": null,
     "set_0": [
-        "internet",
-        "Python",
-        "Business",
-        "Web Development",
-        "Networking",
-        "Object-Technology Programming",
-        "Microsoft/.NET",
-        "Perl",
-        "XML",
-        "Mobile Technology",
-        "Software Engineering",
-        "Java",
-        "Open Source",
         "Miscellaneous",
-        "In Action",
-        "Object-Oriented Programming",
-        "PHP",
-        "Internet",
         "Microsoft",
-        "java",
-        "Next Generation Databases",
-        "Theory",
-        "Programming",
-        "PowerBuilder",
-        "Computer Graphics",
+        "Microsoft/.NET",
+        "Open Source",
+        "Python",
+        "Internet",
+        "Web Development",
         "SOA",
+        "Computer Graphics",
+        "PowerBuilder",
+        "PHP",
+        "Object-Oriented Programming",
+        "Next Generation Databases",
+        "Perl",
+        "In Action",
+        "XML",
+        "Theory",
+        "Mobile Technology",
         "Algorithmic Art",
+        "java",
+        "Software Engineering",
+        "Client-Server",
         "Microsoft .NET",
-        "Client-Server"
+        "internet",
+        "Networking",
+        "Business",
+        "Java",
+        "Object-Technology Programming",
+        "Programming"
     ],
     "set_1": [
-        "P",
-        "Python",
-        "Software Development",
-        "Mobile",
-        "Perl",
         "Networking",
-        "Internet",
-        ".NET",
+        "Java",
         "Business",
+        "Perl",
+        "Theory",
+        "",
+        "Open Source",
+        "S",
+        "P",
+        "Client-Server",
+        "Python",
+        ".NET",
+        "Internet",
+        "Mobile",
         "Software Engineering",
         "Computer Graphics",
-        "",
-        "Theory",
-        "S",
-        "Client-Server",
-        "Open Source",
-        "Java"
+        "Software Development"
     ]
 }
+
 (d) Afficher le nombre de livres qui contiennent des noms de langages suivants dans leur description longue : Python, Java, C++, Scala. On pourra s'appuyer sur des expressions régulières et une condition or.
 books.count_documents({"$or": [{"longDescription": {"$regex": "Python"}}, {"longDescription": {"$regex": "Java"}}, {"longDescription": {"$regex": "C++"}}, {"longDescription": {"$regex": "Scala"}}]})
 Il y a 195 livres contenant au moins un des mots Python, Java, C++, Scala dans leur description longue.
 
 (e) Afficher diverses informations statistiques sur notre base de données : nombre maximal, minimal, et moyen de pages par catégorie. On utilisera une pipeline d'agrégation, le mot-clé $group, ainsi que les accumulateurs appropriés. N'oubliez pas d'aller voir "$unwind" pour ce problème.
+books.aggregate([{"$unwind": "$categories"}, {"$group": {"_id": "$categories", "max": {"$max": "$pageCount"}, "min": {"$min": "$pageCount"}, "avg": {"$avg": "$pageCount"}}}])
 Statistiques du nombre de pages par catégorie :
 [
-    {
-        "_id": "internet",
-        "max": 400,
-        "min": 400,
-        "avg": 400.0
-    },
-    {
-        "_id": "Software Development",
-        "max": 600,
-        "min": 600,
-        "avg": 600.0
-    },
-    {
-        "_id": "Python",
-        "max": 688,
-        "min": 350,
-        "avg": 482.3333333333333
-    },
-    {
-        "_id": "Business",
-        "max": 696,
-        "min": 180,
-        "avg": 404.1666666666667
-    },
-    {
-        "_id": "Web Development",
-        "max": 688,
-        "min": 300,
-        "avg": 441.47058823529414
-    },
-    {
-        "_id": "Networking",
-        "max": 591,
-        "min": 0,
-        "avg": 366.42857142857144
-    },
-    {
-        "_id": "Object-Technology Programming",
-        "max": 200,
-        "min": 200,
-        "avg": 200.0
-    },
-    {
-        "_id": ".NET",
-        "max": 925,
-        "min": 925,
-        "avg": 925.0
-    },
-    {
-        "_id": "Microsoft/.NET",
-        "max": 0,
-        "min": 0,
-        "avg": 0.0
-    },
-    {
-        "_id": "Perl",
-        "max": 504,
-        "min": 304,
-        "avg": 385.3333333333333
-    },
-    {
-        "_id": "S",
-        "max": 350,
-        "min": 350,
-        "avg": 350.0
-    },
-    {
-        "_id": "XML",
-        "max": 680,
-        "min": 304,
-        "avg": 482.0
-    },
-    {
-        "_id": "Mobile Technology",
-        "max": 504,
-        "min": 0,
-        "avg": 296.5
-    },
-    {
-        "_id": "Software Engineering",
-        "max": 544,
-        "min": 0,
-        "avg": 287.75
-    },
-    {
-        "_id": "Java",
-        "max": 1088,
-        "min": 0,
-        "avg": 412.21875
-    },
-    {
-        "_id": "",
-        "max": 368,
-        "min": 200,
-        "avg": 284.0
-    },
-    {
-        "_id": "Open Source",
-        "max": 532,
-        "min": 416,
-        "avg": 474.0
-    },
-    {
-        "_id": "Miscella",
-        "max": 0,
-        "min": 0,
-        "avg": 0.0
-    },
-    {
-        "_id": "Mobile",
-        "max": 416,
-        "min": 416,
-        "avg": 416.0
-    },
     {
         "_id": "Miscellaneous",
         "max": 1096,
         "min": 316,
         "avg": 706.0
-    },
-    {
-        "_id": "In Action",
-        "max": 0,
-        "min": 0,
-        "avg": 0.0
-    },
-    {
-        "_id": "Object-Oriented Programming",
-        "max": 512,
-        "min": 350,
-        "avg": 408.5
-    },
-    {
-        "_id": "Internet",
-        "max": 912,
-        "min": 0,
-        "avg": 441.2439024390244
-    },
-    {
-        "_id": "PHP",
-        "max": 552,
-        "min": 552,
-        "avg": 552.0
     },
     {
         "_id": "Microsoft",
@@ -222,22 +86,40 @@ Statistiques du nombre de pages par catégorie :
         "avg": 572.375
     },
     {
-        "_id": "java",
+        "_id": "Open Source",
+        "max": 532,
+        "min": 416,
+        "avg": 474.0
+    },
+    {
+        "_id": "Microsoft/.NET",
         "max": 0,
         "min": 0,
         "avg": 0.0
     },
     {
-        "_id": "Next Generation Databases",
-        "max": 0,
-        "min": 0,
-        "avg": 0.0
+        "_id": "Python",
+        "max": 688,
+        "min": 350,
+        "avg": 482.3333333333333
     },
     {
-        "_id": "Theory",
-        "max": 591,
-        "min": 280,
-        "avg": 420.42857142857144
+        "_id": "Web Development",
+        "max": 688,
+        "min": 300,
+        "avg": 441.47058823529414
+    },
+    {
+        "_id": "Internet",
+        "max": 912,
+        "min": 0,
+        "avg": 441.2439024390244
+    },
+    {
+        "_id": "SOA",
+        "max": 250,
+        "min": 250,
+        "avg": 250.0
     },
     {
         "_id": "Computer Graphics",
@@ -252,40 +134,34 @@ Statistiques du nombre de pages par catégorie :
         "avg": 433.7142857142857
     },
     {
-        "_id": "Programming",
-        "max": 570,
-        "min": 0,
-        "avg": 362.1666666666667
+        "_id": "PHP",
+        "max": 552,
+        "min": 552,
+        "avg": 552.0
     },
     {
-        "_id": "Client Server",
-        "max": 368,
-        "min": 368,
-        "avg": 368.0
-    },
-    {
-        "_id": "P",
+        "_id": "Object-Oriented Programming",
         "max": 512,
-        "min": 512,
-        "avg": 512.0
+        "min": 350,
+        "avg": 408.5
     },
     {
-        "_id": "Algorithmic Art",
+        "_id": "Next Generation Databases",
         "max": 0,
         "min": 0,
         "avg": 0.0
     },
     {
-        "_id": "SOA",
-        "max": 250,
-        "min": 250,
-        "avg": 250.0
+        "_id": "Perl",
+        "max": 504,
+        "min": 304,
+        "avg": 385.3333333333333
     },
     {
-        "_id": "Microsoft .NET",
-        "max": 848,
+        "_id": "In Action",
+        "max": 0,
         "min": 0,
-        "avg": 437.02941176470586
+        "avg": 0.0
     },
     {
         "_id": "Computer Graph",
@@ -294,10 +170,136 @@ Statistiques du nombre de pages par catégorie :
         "avg": 400.0
     },
     {
+        "_id": "XML",
+        "max": 680,
+        "min": 304,
+        "avg": 482.0
+    },
+    {
+        "_id": "Theory",
+        "max": 591,
+        "min": 280,
+        "avg": 420.42857142857144
+    },
+    {
+        "_id": "Mobile Technology",
+        "max": 504,
+        "min": 0,
+        "avg": 296.5
+    },
+    {
+        "_id": "Algorithmic Art",
+        "max": 0,
+        "min": 0,
+        "avg": 0.0
+    },
+    {
+        "_id": "S",
+        "max": 350,
+        "min": 350,
+        "avg": 350.0
+    },
+    {
+        "_id": "Miscella",
+        "max": 0,
+        "min": 0,
+        "avg": 0.0
+    },
+    {
+        "_id": "java",
+        "max": 0,
+        "min": 0,
+        "avg": 0.0
+    },
+    {
+        "_id": "Software Engineering",
+        "max": 544,
+        "min": 0,
+        "avg": 287.75
+    },
+    {
         "_id": "Client-Server",
         "max": 1101,
         "min": 220,
         "avg": 516.0
+    },
+    {
+        "_id": "Mobile",
+        "max": 416,
+        "min": 416,
+        "avg": 416.0
+    },
+    {
+        "_id": "Microsoft .NET",
+        "max": 848,
+        "min": 0,
+        "avg": 437.02941176470586
+    },
+    {
+        "_id": "P",
+        "max": 512,
+        "min": 512,
+        "avg": 512.0
+    },
+    {
+        "_id": ".NET",
+        "max": 925,
+        "min": 925,
+        "avg": 925.0
+    },
+    {
+        "_id": "internet",
+        "max": 400,
+        "min": 400,
+        "avg": 400.0
+    },
+    {
+        "_id": "Software Development",
+        "max": 600,
+        "min": 600,
+        "avg": 600.0
+    },
+    {
+        "_id": "Client Server",
+        "max": 368,
+        "min": 368,
+        "avg": 368.0
+    },
+    {
+        "_id": "Java",
+        "max": 1088,
+        "min": 0,
+        "avg": 412.21875
+    },
+    {
+        "_id": "Networking",
+        "max": 591,
+        "min": 0,
+        "avg": 366.42857142857144
+    },
+    {
+        "_id": "Business",
+        "max": 696,
+        "min": 180,
+        "avg": 404.1666666666667
+    },
+    {
+        "_id": "Object-Technology Programming",
+        "max": 200,
+        "min": 200,
+        "avg": 200.0
+    },
+    {
+        "_id": "",
+        "max": 368,
+        "min": 200,
+        "avg": 284.0
+    },
+    {
+        "_id": "Programming",
+        "max": 570,
+        "min": 0,
+        "avg": 362.1666666666667
     }
 ]
 
@@ -428,102 +430,102 @@ Liste des 20 premiers livres publiés après 2009:
 ]
 
 (g) À partir de la liste des auteurs, créez de nouveaux attributs (author_1, author_2 ... author_n). Observez le comportement de "$arrayElemAt". N'affichez que les 20 premiers dans l'ordre chronologique.
-[{"$project": {"_id": "title","author_1": {"$arrayElemAt": ["$authors", 0]}, "author_2": {"$arrayElemAt": ["$authors", 1]}, "author_3": {"$arrayElemAt": ["$authors", 2]}, "author_4": {"$arrayElemAt": ["$authors", 3]}}},{"$sort": {"publishedDate": 1}}, {"$limit": 20}]
+[{"$project": {"_id": "$title","author_1": {"$arrayElemAt": ["$authors", 0]}, "author_2": {"$arrayElemAt": ["$authors", 1]}, "author_3": {"$arrayElemAt": ["$authors", 2]}, "author_4": {"$arrayElemAt": ["$authors", 3]}}},{"$sort": {"publishedDate": 1}}, {"$limit": 20}]
 Liste des autheurs pour les 20 premiers livres par ordre de publication:
 [
     {
-        "_id": "title",
+        "_id": "Taming Jaguar",
         "author_1": "Michael J. Barlotta",
         "author_2": "Jason R. Weiss"
     },
     {
-        "_id": "title",
+        "_id": "Hello! Flex 4",
         "author_1": "Peter Armstrong"
     },
     {
-        "_id": "title",
+        "_id": "Flex 4 in Action",
         "author_1": "Tariq Ahmed",
         "author_2": "Dan Orlando",
         "author_3": "John C. Bland II",
         "author_4": "Joel Hooks"
     },
     {
-        "_id": "title",
+        "_id": "MongoDB in Action",
         "author_1": "Kyle Banker"
     },
     {
-        "_id": "title",
+        "_id": "Flexible Rails",
         "author_1": "Peter Armstrong"
     },
     {
-        "_id": "title",
+        "_id": "OSGi in Depth",
         "author_1": "Alexandre de Castro Alves"
     },
     {
-        "_id": "title",
+        "_id": "3D User Interfaces with Java 3D",
         "author_1": "Jon Barrilleaux"
     },
     {
-        "_id": "title",
+        "_id": "Specification by Example",
         "author_1": "Gojko Adzic"
     },
     {
-        "_id": "title",
+        "_id": "Coffeehouse",
         "author_1": "Levi Asher",
         "author_2": "Christian Crumlish"
     },
     {
-        "_id": "title",
+        "_id": "Collective Intelligence in Action",
         "author_1": "Satnam Alag"
     },
     {
-        "_id": "title",
+        "_id": "Distributed Application Development with PowerBuilder 6.0",
         "author_1": "Michael J. Barlotta"
     },
     {
-        "_id": "title",
+        "_id": "Team Foundation Server 2008 in Action",
         "author_1": "Jamil Azher"
     },
     {
-        "_id": "title",
+        "_id": "Flex on Java",
         "author_1": "Bernerd Allmon",
         "author_2": "Jeremy Anderson"
     },
     {
-        "_id": "title",
+        "_id": "Jaguar Development with PowerBuilder 7",
         "author_1": "Michael Barlotta"
     },
     {
-        "_id": "title",
+        "_id": "Flex 3 in Action",
         "author_1": "Tariq Ahmed with Jon Hirschi",
         "author_2": "Faisal Abid"
     },
     {
-        "_id": "title",
+        "_id": "Griffon in Action",
         "author_1": "Andres Almiray",
         "author_2": "Danno Ferrin",
         "author_3": "",
         "author_4": "James Shingler"
     },
     {
-        "_id": "title",
+        "_id": "Android in Action, Second Edition",
         "author_1": "W. Frank Ableson",
         "author_2": "Robi Sen"
     },
     {
-        "_id": "title",
+        "_id": "Unlocking Android",
         "author_1": "W. Frank Ableson",
         "author_2": "Charlie Collins",
         "author_3": "Robi Sen"
     },
     {
-        "_id": "title",
+        "_id": "Zend Framework in Action",
         "author_1": "Rob Allen",
         "author_2": "Nick Lo",
         "author_3": "Steven Brown"
     },
     {
-        "_id": "title",
+        "_id": "Brownfield Application Development in .NET",
         "author_1": "Kyle Baley",
         "author_2": "Donald Belcham"
     }
@@ -542,27 +544,19 @@ Nombre de publications pour les 10 premiers auteurs les plus prolifiques:
         "nb_livres": 6
     },
     {
-        "_id": "Craig Walls",
-        "nb_livres": 4
-    },
-    {
         "_id": "Christian Bauer",
         "nb_livres": 4
     },
     {
-        "_id": "Richard Siddaway",
-        "nb_livres": 3
+        "_id": "Craig Walls",
+        "nb_livres": 4
     },
     {
         "_id": "Jeffrey Palermo",
         "nb_livres": 3
     },
     {
-        "_id": "Tim Hatton",
-        "nb_livres": 3
-    },
-    {
-        "_id": "David A. Black",
+        "_id": "Richard Siddaway",
         "nb_livres": 3
     },
     {
@@ -570,7 +564,15 @@ Nombre de publications pour les 10 premiers auteurs les plus prolifiques:
         "nb_livres": 3
     },
     {
-        "_id": "Jon Skeet",
+        "_id": "Dave Crane",
+        "nb_livres": 3
+    },
+    {
+        "_id": "Bear Bibeault",
+        "nb_livres": 3
+    },
+    {
+        "_id": "David A. Black",
         "nb_livres": 3
     }
 ]
@@ -580,48 +582,53 @@ books.aggregate([{"$project": {"nb_auteurs": {"$size": "$authors"}}}, {"$group":
 Distribution du nombre d'auteurs:
 [
     {
-        "_id": 2,
-        "nb_livres": 105
-    },
-    {
-        "_id": 0,
-        "nb_livres": 37
-    },
-    {
-        "_id": 7,
-        "nb_livres": 2
-    },
-    {
-        "_id": 8,
-        "nb_livres": 3
-    },
-    {
-        "_id": 3,
-        "nb_livres": 9
-    },
-    {
         "_id": 5,
         "nb_livres": 16
-    },
-    {
-        "_id": 1,
-        "nb_livres": 206
     },
     {
         "_id": 4,
         "nb_livres": 47
     },
     {
+        "_id": 1,
+        "nb_livres": 206
+    },
+    {
+        "_id": 2,
+        "nb_livres": 105
+    },
+    {
+        "_id": 8,
+        "nb_livres": 3
+    },
+    {
+        "_id": 7,
+        "nb_livres": 2
+    },
+    {
         "_id": 6,
         "nb_livres": 6
+    },
+    {
+        "_id": 3,
+        "nb_livres": 9
+    },
+    {
+        "_id": 0,
+        "nb_livres": 37
     }
 ]
 
-(j) Afficher l'occurrence de chaque auteur selon son index dans l'attribut "authors". Un même auteur peut avoir plusieurs index. N'affichez pas les auteurs vides, sortez par ordre d'occurrence décroissant avec une limite de 20. Utilisez "$unwind" pour séparer les auteurs et "$project" pour supprimer les auteurs absents.agr = books.aggregate([{"$unwind": {"path": "$authors", "includeArrayIndex": "author_index"}}, {"$project": {"name": "$authors", "index": "$author_index"}}, {"$sort": {"index": -1}}, {"$limit": 20}])
+(j) Afficher l'occurrence de chaque auteur selon son index dans l'attribut "authors". Un même auteur peut avoir plusieurs index. N'affichez pas les auteurs vides, sortez par ordre d'occurrence décroissant avec une limite de 20. Utilisez "$unwind" pour séparer les auteurs et "$project" pour supprimer les auteurs absents.books.aggregate([{"$match": {"authors.0": {"$exists": True }}}, {"$unwind": {"path": "$authors", "includeArrayIndex": "author_index"}}, {"$match": {"authors": {"$ne": ""}}}, {"$project": {"name": "$authors", "index": "$author_index"}}, {"$sort": {"index": -1}}, {"$limit": 20}])
 [
     {
         "_id": 559,
         "name": "Kimberly Tripp",
+        "index": 7
+    },
+    {
+        "_id": 230,
+        "name": "Kimberly L. Tripp",
         "index": 7
     },
     {
@@ -630,28 +637,8 @@ Distribution du nombre d'auteurs:
         "index": 7
     },
     {
-        "_id": 230,
-        "name": "Kimberly L. Tripp",
-        "index": 7
-    },
-    {
-        "_id": 559,
-        "name": "",
-        "index": 6
-    },
-    {
         "_id": 232,
         "name": "Kimberly L. Tripp",
-        "index": 6
-    },
-    {
-        "_id": 175,
-        "name": "",
-        "index": 6
-    },
-    {
-        "_id": 230,
-        "name": "",
         "index": 6
     },
     {
@@ -660,13 +647,8 @@ Distribution du nombre d'auteurs:
         "index": 6
     },
     {
-        "_id": 559,
-        "name": "Paul Randal",
-        "index": 5
-    },
-    {
-        "_id": 232,
-        "name": "",
+        "_id": 239,
+        "name": "Matthew Hinze",
         "index": 5
     },
     {
@@ -677,6 +659,21 @@ Distribution du nombre d'auteurs:
     {
         "_id": 681,
         "name": "Jared Armstrong",
+        "index": 5
+    },
+    {
+        "_id": 755,
+        "name": "Douglas Garrett",
+        "index": 5
+    },
+    {
+        "_id": 240,
+        "name": "Jeremy Skinner",
+        "index": 5
+    },
+    {
+        "_id": 559,
+        "name": "Paul Randal",
         "index": 5
     },
     {
@@ -695,28 +692,33 @@ Distribution du nombre d'auteurs:
         "index": 5
     },
     {
-        "_id": 755,
-        "name": "Douglas Garrett",
-        "index": 5
-    },
-    {
-        "_id": 240,
-        "name": "Jeremy Skinner",
-        "index": 5
-    },
-    {
-        "_id": 231,
-        "name": "",
-        "index": 5
-    },
-    {
-        "_id": 239,
-        "name": "Matthew Hinze",
-        "index": 5
+        "_id": 237,
+        "name": "Ellen Friedman",
+        "index": 4
     },
     {
         "_id": 232,
         "name": "Paul S. Randal",
+        "index": 4
+    },
+    {
+        "_id": 60,
+        "name": "Joe Walker",
+        "index": 4
+    },
+    {
+        "_id": 226,
+        "name": "Brandon Mathis",
+        "index": 4
+    },
+    {
+        "_id": 230,
+        "name": "Adam Machanic",
+        "index": 4
+    },
+    {
+        "_id": 148,
+        "name": "David Sean Taylor",
         "index": 4
     }
 ]
